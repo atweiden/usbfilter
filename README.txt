@@ -4,7 +4,7 @@ info
 ====
 With these scripts you can filter which USB devices can connect to your linux
 system. For instance, allow your usb mass-storage device only to be exactly
-that and not one day register itself as a keyboard... 
+that and not one day register itself as a keyboard...
 
 Setup
 =====

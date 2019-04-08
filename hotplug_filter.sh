@@ -11,8 +11,8 @@ if [ "$SUBSYSTEM" = "usb" ] ; then
 		cd /sys/$DEVPATH/
 	fi
 
-	if [ "$DEVTYPE" = "usb_interface" ] ; then 
-		cd /sys/$DEVPATH/.. 
+	if [ "$DEVTYPE" = "usb_interface" ] ; then
+		cd /sys/$DEVPATH/..
 	fi
 
 	port=$(basename $DEVPATH)
@@ -23,13 +23,13 @@ if [ "$SUBSYSTEM" = "usb" ] ; then
 
 
 	if [ "$DEVTYPE" = "usb_device" ] ; then
-		search="$idVendor:$idProduct" 
+		search="$idVendor:$idProduct"
 	fi
-	
+
 	if [  "$DEVTYPE" = "usb_interface" ] ; then
 		cd /sys/$DEVPATH/
 		bInterfaceClass=$(cat bInterfaceClass)
-		search="$idVendor:$idProduct:$bInterfaceClass" 
+		search="$idVendor:$idProduct:$bInterfaceClass"
 	fi
 	echo $search >> /tmp/search
 	grep -q $search /etc/usb_whitelist
