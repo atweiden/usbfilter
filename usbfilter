@@ -111,22 +111,22 @@ hotplug_usb() {
   local _b_interface_class
   local _search_query
 
-  [[ "$ACTION" != "add" ]] \
+  [[ "$ACTION" != 'add' ]] \
     && exit
-  [[ "$DEVTYPE" == "usb_device" ]] \
+  [[ "$DEVTYPE" == 'usb_device' ]] \
     && (cd "/sys/$DEVPATH/" || exit 1)
-  [[ "$DEVTYPE" == "usb_interface" ]] \
+  [[ "$DEVTYPE" == 'usb_interface' ]] \
     && (cd "/sys/$DEVPATH/.." || exit 1)
 
   _port="$(basename "$DEVPATH")"
   _id_product="$(cat idProduct)"
   _id_vendor="$(cat idVendor)"
 
-  if [[ "$DEVTYPE" == "usb_device" ]]; then
+  if [[ "$DEVTYPE" == 'usb_device' ]]; then
     _search_query="$_id_vendor:$_id_product"
   fi
 
-  if [[ "$DEVTYPE" == "usb_interface" ]]; then
+  if [[ "$DEVTYPE" == 'usb_interface' ]]; then
     (cd "/sys/$DEVPATH/" || exit 1)
     _b_interface_class="$(cat bInterfaceClass)"
     _search_query="$_id_vendor:$_id_product:$_b_interface_class"
@@ -146,7 +146,7 @@ hotplug_usb() {
 hotplug() {
   env >> "$USBFILTER_LOG_HOTPLUG"
   INFO "$SUBSYSTEM"
-  if [[ $SUBSYSTEM == "usb" ]]; then
+  if [[ "$SUBSYSTEM" == 'usb' ]]; then
     hotplug_usb
   else
     hotplug_other
@@ -174,9 +174,9 @@ scan_new() {
 }
 
 scan() {
-  if [[ "$_authorized" == "true" ]];
+  if [[ "$_authorized" == 'true' ]];
     scan_authorized
-  elif [[ "$_new" == "true" ]];
+  elif [[ "$_new" == 'true' ]];
     scan_new
   else
     :
