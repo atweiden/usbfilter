@@ -31,4 +31,9 @@ echo "/usr/bin/hotplug_filter.sh" > /proc/sys/kernel/hotplug
 Use `/usr/bin/scan_new.sh` to see devices which aren't in the whitelist
 yet.
 
+## Licensing
+
+This is free and unencumbered public domain software. For more
+information, see http://unlicense.org/ or the accompanying UNLICENSE file.
+
 [usb class code]: http://www.usb.org/developers/defined_class
