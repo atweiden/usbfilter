@@ -1,34 +1,35 @@
 # usbfilter
 
-With these scripts you can filter which USB devices can connect to your
-Linux system. For instance, allow your USB mass storage device only to
-be exactly that and not one day register itself as a keyboard.
+Filter which USB devices can connect to your system.
+
+Allow your USB mass storage device only to be exactly that, and not one
+day register itself as a keyboard.
 
 ## Setup
 
-Create `/etc/usb_whitelist`:
+Create `/etc/usbfilter/whitelist`:
 
 ```
-idVendor:idProduct:AllowedClass
+$id_vendor:$id_product:$allowed_class
+...
 ...
 ```
 
-`AllowedClass` is the [usb class code][usb class code]. For example,
-use `08` for usb flash drives.
+`$allowed_class` is the [USB class code][USB class code]. For example,
+use `08` for USB flash drives.
 
 Add the following to the kernel command line (edit your boot loader
 config): `usbcore.authorized_default=0`.
 
-Make sure the following runs by init on system boot:
+Ensure the following runs on system startup:
 
 ```sh
-# usbfilter
 echo 0 > /sys/bus/usb/drivers_autoprobe
-echo "/usr/bin/hotplug_filter.sh" > /proc/sys/kernel/hotplug
-/usr/bin/authorize_scan.sh
+echo '/usr/bin/usbfilter hotplug' > /proc/sys/kernel/hotplug
+/usr/bin/usbfilter scan --authorized
 ```
 
-Use `/usr/bin/scan_new.sh` to see devices which aren't in the whitelist
+Use `usbfilter scan --new` to see devices which aren't in the whitelist
 yet.
 
 ## Licensing
@@ -36,4 +37,4 @@ yet.
 This is free and unencumbered public domain software. For more
 information, see http://unlicense.org/ or the accompanying UNLICENSE file.
 
-[usb class code]: http://www.usb.org/developers/defined_class
+[USB class code]: http://www.usb.org/developers/defined_class

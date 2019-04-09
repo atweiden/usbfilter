@@ -1,0 +1,82 @@
+#!/bin/bash
+
+# constants
+readonly USBFILTER_CONFIG_DIR="/etc/usbfilter"
+readonly USBFILTER_CONFIG_WHITELIST="$USBFILTER_CONFIG_DIR/whitelist"
+readonly USBFILTER_LOG_DIR="/var/log/usbfilter"
+readonly USBFILTER_LOG_DENIED="$USBFILTER_LOG_DIR/denied.log"
+readonly USBFILTER_LOG_HOTPLUG="$USBFILTER_LOG_DIR/hotplug.log"
+readonly USBFILTER_LOG_SEARCH="$USBFILTER_LOG_DIR/search.log"
+
+main() {
+  :
+}
+
+authorize_scan() {
+  local _id_product
+  local _id_vendor
+  cd /sys/bus/usb/devices/ \
+    || exit 1
+  grep -v : -- * | while read -r _device; do
+    _id_product="$(cat "$_device/idProduct")"
+    _id_vendor="$(cat "$_device/idVendor")"
+    grep "$_id_vendor:$_id_product" "$USBFILTER_CONFIG_WHITELIST" \
+      && echo 1 > "$_device/authorized"
+  done
+}
+
+hotplug_filter() {
+  local _port
+  local _id_product
+  local _id_vendor
+  local _b_interface_class
+  local _search_query
+
+  env >> "$USBFILTER_LOG_HOTPLUG"
+
+  echo "$SUBSYSTEM"
+
+  if [[ "$SUBSYSTEM" == "usb" ]]; then
+    [[ "$ACTION" != "add" ]] \
+      && exit
+    [[ "$DEVTYPE" == "usb_device" ]] \
+      && (cd "/sys/$DEVPATH/" || exit 1)
+    [[ "$DEVTYPE" == "usb_interface" ]] \
+      && (cd "/sys/$DEVPATH/.." || exit 1)
+
+    _port="$(basename "$DEVPATH")"
+    _id_product="$(cat idProduct)"
+    _id_vendor="$(cat idVendor)"
+
+    if [[ "$DEVTYPE" == "usb_device" ]]; then
+      _search_query="$_id_vendor:$_id_product"
+    fi
+
+    if [[ "$DEVTYPE" == "usb_interface" ]]; then
+      (cd "/sys/$DEVPATH/" || exit 1)
+      _b_interface_class="$(cat bInterfaceClass)"
+      _search_query="$_id_vendor:$_id_product:$_b_interface_class"
+    fi
+
+    echo "$_search_query" >> "$USBFILTER_LOG_SEARCH"
+
+    grep -q "$_search_query" "$USBFILTER_CONFIG_WHITELIST" \
+      || (echo "[usbfilter] denied $DEVPATH" >> "$USBFILTER_LOG_DENIED"; exit)
+
+    [[ -e "/sys/$DEVPATH/authorized" ]] \
+      && echo 1 > "/sys/$DEVPATH/authorized"
+
+    echo "$_port" > /sys/bus/usb/drivers_probe
+  fi
+}
+
+scan_new() {
+  lsusb | awk '{print $6}' | while read -r _line; do
+    grep -q "$_line" "$USBFILTER_CONFIG_WHITELIST" \
+      || echo "[usbfilter] $_line is not in whitelist yet"
+  done
+}
+
+main
+
+# vim: set filetype=sh foldmethod=marker foldlevel=0 nowrap:
