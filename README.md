@@ -32,6 +32,10 @@ echo '/usr/bin/usbfilter hotplug' > /proc/sys/kernel/hotplug
 Use `usbfilter scan --new` to see devices which aren't in the whitelist
 yet.
 
+## Credit
+
+- [Albert S.](https://quitesimple.org/page/index)
+
 ## Licensing
 
 This is free and unencumbered public domain software. For more
