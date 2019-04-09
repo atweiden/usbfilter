@@ -1,6 +1,6 @@
 # usbfilter
 
-Filter which USB devices can connect to your system.
+Control which USB devices can connect to your Linux machine.
 
 Allow your USB mass storage device only to be exactly that, and not one
 day register itself as a keyboard.
