@@ -13,6 +13,7 @@ readonly USBFILTER_LOG_DIR="/var/log/usbfilter"
 readonly USBFILTER_LOG_DENIED="$USBFILTER_LOG_DIR/denied.log"
 readonly USBFILTER_LOG_HOTPLUG="$USBFILTER_LOG_DIR/hotplug.log"
 readonly USBFILTER_LOG_SEARCH="$USBFILTER_LOG_DIR/search.log"
+readonly VERSION=0.0.1
 
 # end constants }}}
 # ==============================================================================
