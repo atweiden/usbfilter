@@ -2,8 +2,12 @@
 
 Control which USB devices can connect to your Linux machine.
 
+## Description
+
 Allow your USB mass storage device only to be exactly that, and not one
 day register itself as a keyboard.
+
+**WARNING**: experimental.
 
 ## Setup
 
