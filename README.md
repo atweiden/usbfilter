@@ -36,6 +36,10 @@ echo '/usr/bin/usbfilter hotplug' > /proc/sys/kernel/hotplug
 Use `usbfilter scan --new` to see devices which aren't in the whitelist
 yet.
 
+## Resources
+
+- https://www.kernel.org/doc/html/v5.0/driver-api/usb/hotplug.html
+
 ## Credit
 
 - [Albert S.](https://quitesimple.org/page/index)
@@ -45,4 +49,4 @@ yet.
 This is free and unencumbered public domain software. For more
 information, see http://unlicense.org/ or the accompanying UNLICENSE file.
 
-[USB class code]: http://www.usb.org/developers/defined_class
+[USB class code]: https://www.usb.org/defined-class-codes
